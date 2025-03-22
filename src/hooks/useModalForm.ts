@@ -48,6 +48,12 @@ export const useModalForm = (onClose: () => void) => {
     setSearchQuery(e.target.value);
   };
 
+  const resetModalForm = () => {
+    setSelectedCurrency(null);
+    setCurrentPrice(null);
+    setQuantity(1);
+  };
+
   const handleAdd = () => {
     if (selectedCurrency && currentPrice) {
       const priceChangeInfo = tickerData?.find((ticker: TickerInfo) => ticker.symbol === `${selectedCurrency}USDT`);
@@ -66,18 +72,13 @@ export const useModalForm = (onClose: () => void) => {
       const updatedPortfolio = [...portfolio, currencyData];
 
       setPortfolio(calculatePortfolioShare(updatedPortfolio));
-
-      setSelectedCurrency(null);
-      setCurrentPrice(null);
-      setQuantity(0);
+      resetModalForm();
       onClose();
     }
   };
 
   const handleCancel = () => {
-    setSelectedCurrency(null);
-    setCurrentPrice(null);
-    setQuantity(1);
+    resetModalForm();
   };
 
   return {

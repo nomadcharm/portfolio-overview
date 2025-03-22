@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { ReactSVG } from "react-svg";
 import { useModalForm } from "../../hooks/useModalForm";
 import { PriceInfo, TickerInfo } from "../../types/types";
@@ -24,7 +24,14 @@ const ModalForm: FC<{ onClose: () => void }> = ({ onClose }) => {
     handleSearchQuery,
     handleAdd,
     handleCancel,
-  } = useModalForm(onClose)
+  } = useModalForm(onClose);
+
+  const handleQuantityChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    if (!isNaN(value) && value >= 0) {
+        setQuantity(value);
+    }
+}, [setQuantity]);
 
   return (
     <div className="modal">
@@ -85,8 +92,7 @@ const ModalForm: FC<{ onClose: () => void }> = ({ onClose }) => {
                 className="modal__selected-quantity"
                 type="number"
                 value={quantity !== null ? quantity : 0}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                placeholder="Quantity"
+                onChange={handleQuantityChange}
               />
               <div className="modal__selected-btn">
                 <button
