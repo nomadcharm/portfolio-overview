@@ -8,6 +8,7 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import closeIcon from "../../assets/icon-close.svg";
 import "./modalForm.scss";
+import Loader from "../Loader/Loader";
 
 interface PriceInfo {
   symbol: string;
@@ -112,7 +113,7 @@ const ModalForm: FC<{ onClose: () => void }> = ({ onClose }) => {
             />
           </div>
 
-          {isLoading && <p>Загрузка...</p>}
+          {isLoading && <Loader />}
 
           <ul className="modal__currencies currency-list">
             {filteredCurrencies.map((currency) => {
