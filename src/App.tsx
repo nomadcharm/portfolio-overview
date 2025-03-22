@@ -1,9 +1,8 @@
 import { useState } from "react";
-import AssetList from "./components/AssetList/AssetList"
-import Header from "./components/Header/Header"
-import { useWebSocketPrices } from "./redux/features/binanceSlice";
+import AssetList from "./components/AssetList/AssetList";
+import Header from "./components/Header/Header";
 import { IPriceInfo } from "./types/types";
-
+import { useWebSocketPrices } from "./hooks/useWebsocketPrices";
 
 function App() {
 

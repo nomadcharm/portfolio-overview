@@ -3,7 +3,8 @@ import { IAsset, IPriceInfo, ITickerInfo } from "../types/types";
 import { calculatePortfolioShare } from "../utils/calculatePortfolioShare";
 import { useLocalStorage } from "./useLocalStorage";
 import { useOutsideClick } from "./useOutsideClick";
-import { useGet24hrTickerQuery, useGetCurrentPricesQuery, useGetExchangeInfoQuery, useWebSocketPrices } from "../redux/features/binanceSlice";
+import { useGet24hrTickerQuery, useGetCurrentPricesQuery, useGetExchangeInfoQuery } from "../redux/features/binanceSlice";
+import { useWebSocketPrices } from "./useWebsocketPrices";
 
 export const useModalForm = (onClose: () => void) => {
   const { data: exchangeData, isLoading: isLoadingExchange } = useGetExchangeInfoQuery(null);
