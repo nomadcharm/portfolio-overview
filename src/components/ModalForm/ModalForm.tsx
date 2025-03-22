@@ -7,7 +7,11 @@ import Loader from "../Loader/Loader";
 import closeIcon from "../../assets/icon-close.svg";
 import "./modalForm.scss";
 
-const ModalForm: FC<{ onClose: () => void }> = ({ onClose }) => {
+interface ModalFormProps {
+  onClose: () => void
+}
+
+const ModalForm: FC<ModalFormProps> = ({ onClose }) => {
   const {
     isLoading,
     isQuantityValid,
@@ -29,9 +33,9 @@ const ModalForm: FC<{ onClose: () => void }> = ({ onClose }) => {
   const handleQuantityChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (!isNaN(value) && value >= 0) {
-        setQuantity(value);
+      setQuantity(value);
     }
-}, [setQuantity]);
+  }, [setQuantity]);
 
   return (
     <div className="modal">

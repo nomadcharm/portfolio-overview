@@ -1,7 +1,13 @@
+import { FC } from "react";
 import { setToFixed } from "../../utils/setToFixed";
 import { IAsset } from "../../types/types";
 
-const Asset = ({ asset, handleClick }: { asset: IAsset, handleClick: () => void }) => {
+interface AssetProps {
+  asset: IAsset,
+  handleClick: () => void,
+}
+
+const Asset: FC<AssetProps> = ({ asset, handleClick }) => {
   return (
     <tr onClick={handleClick}>
       <td>{asset.currency}</td>

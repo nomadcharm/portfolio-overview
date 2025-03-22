@@ -5,7 +5,11 @@ import { IAsset } from "../../types/types";
 import Asset from "../Asset/Asset";
 import "./assetList.scss";
 
-const AssetList: FC<{ updatedPrices: { symbol: string; price: string }[] }> = ({ updatedPrices }) => {
+interface AssetListProps {
+  updatedPrices: {symbol: string; price: string }[]
+}
+
+const AssetList: FC<AssetListProps> = ({ updatedPrices }) => {
   const [assets, setAssets] = useLocalStorage<IAsset[]>("currencies", []);
 
   const updateAssetPrices = () => {
