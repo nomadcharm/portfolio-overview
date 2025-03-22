@@ -1,0 +1,131 @@
+.modal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  &__inner {
+    padding: 30px 40px;
+    width: min(100%, 460px);
+    border-radius: 12px;
+    background-color: var(--clr-solitude);
+  }
+
+  &__content {
+    &:has(.modal__selected-currency) {
+      & > .modal__currencies {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  &__close-btn {
+    padding: 6px;
+    width: 40px;
+    height: 40px;
+    transition: opacity 0.3s ease-in-out;
+
+    &>div>div>svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+
+  &__search {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+    border-radius: 6px;
+  }
+
+  &__currencies {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+
+  &__selected-currency {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__selected-title {
+    margin-bottom: 6px;
+  }
+
+  &__selected-current {
+    margin-bottom: 14px;
+  }
+
+  &__selected-quantity {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+    border-radius: 6px;
+  }
+
+  &__selected-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  &__selected-add {
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    background-color: var(--clr-algae-green);
+  }
+
+  &__selected-cancel {
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    background-color: var(--clr-persimmon);
+  }
+}
+
+.currency-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__data {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    cursor: pointer;
+
+    &>span {
+      &:nth-child(1) {
+        flex-basis: 30%;
+        font-weight: 600;
+      }
+
+      &:nth-child(2) {
+        flex-basis: 55%;
+      }
+
+      &:nth-child(3) {
+        flex-basis: 25%;
+      }
+    }
+  }
+}

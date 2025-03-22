@@ -1,0 +1,39 @@
+.assets {
+  padding-top: 40px;
+  padding-bottom: 40px;
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    &>thead {
+      text-align: left;
+      text-transform: uppercase;
+
+      &>tr {
+        background-color: var(--clr-danube);
+
+        & > th {
+          padding: 14px;
+        }
+      }
+    }
+
+    &>tbody {
+      text-align: left;
+
+      &>tr {
+        border-bottom: 2px solid var(--clr-algae-green);
+        cursor: pointer;
+
+        & > td {
+          padding: 16px;
+        }
+      }
+    }
+  }
+
+  &__warning {
+    font-size: 20px;
+  }
+}

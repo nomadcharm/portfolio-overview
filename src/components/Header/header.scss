@@ -1,0 +1,33 @@
+.header {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: var(--clr-dodger-blue);
+
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+  }
+
+  &__logo {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  &__btn {
+    padding: 10px 20px;
+    font-family: var(--font-boldonse);
+    font-size: 18px;
+    text-transform: lowercase;
+    background-color: var(--clr-algae-green);
+    transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    
+    &:hover {
+      color: var(--clr-persimmon);
+      box-shadow: 4px 4px 0px 0px  var(--clr-persimmon);
+    }
+  }
+}
