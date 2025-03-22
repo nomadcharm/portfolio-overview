@@ -42,8 +42,8 @@ const ModalForm: FC<ModalFormProps> = ({ onClose }) => {
       <div className="modal__inner" ref={modalRef}>
         <div className="modal__content">
           <div className="modal__actions">
-            <h3 className="modal__title">Доступные валюты</h3>
-            <button className="modal__close-btn" onClick={onClose}>
+            <h2 className="modal__title">Доступные валюты</h2>
+            <button className="modal__close-btn" onClick={onClose} aria-label="Закрыть форму">
               <ReactSVG src={closeIcon} />
             </button>
           </div>
@@ -69,7 +69,18 @@ const ModalForm: FC<ModalFormProps> = ({ onClose }) => {
 
               if (currentPrice !== 'N/A' || percentChange !== 'N/A') {
                 return (
-                  <li className="currency-list__item" key={currency} onClick={() => handleCurrencyChoice(currency)}>
+                  <li
+                    className="currency-list__item"
+                    key={currency}
+                    onClick={() => handleCurrencyChoice(currency)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleCurrencyChoice(currency);
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    tabIndex={0}
+                  >
                     <p className="currency-list__data">
                       <span>{currency}</span>
                       <span>${setToFixed(currentPrice, 2)}</span>
@@ -97,6 +108,7 @@ const ModalForm: FC<ModalFormProps> = ({ onClose }) => {
                 type="number"
                 value={quantity !== null ? quantity : 0}
                 onChange={handleQuantityChange}
+                tabIndex={1}
               />
               <div className="modal__selected-btn">
                 <button
