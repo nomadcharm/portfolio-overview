@@ -19,15 +19,17 @@
 
   &__btn {
     padding: 10px 20px;
-    font-family: var(--font-boldonse);
-    font-size: 18px;
-    text-transform: lowercase;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--clr-pickled-bluewood);
     background-color: var(--clr-algae-green);
-    transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    
+    transition: box-shadow 0.3s ease-in-out;
+
+    &:focus,
     &:hover {
-      color: var(--clr-persimmon);
-      box-shadow: 4px 4px 0px 0px  var(--clr-persimmon);
+      color: var(--clr-pickled-bluewood);
+      box-shadow: 4px 4px 0px 0px var(--clr-pickled-bluewood);
     }
   }
 }

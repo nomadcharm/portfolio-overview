@@ -22,7 +22,7 @@ const Header: FC = () => {
             className="header__btn"
             onClick={handleClick}
           >
-            +
+            Добавить актив
           </button>
         </div>
       </header>
