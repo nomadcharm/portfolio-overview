@@ -7,3 +7,13 @@ export interface IAsset {
   priceChangePercent: string,
   portfolioPercentage: string
 }
+
+export interface PriceInfo {
+  symbol: string;
+  price: string;
+}
+
+export interface TickerInfo {
+  symbol: string;
+  priceChangePercent: string;
+}

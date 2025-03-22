@@ -1,97 +1,30 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC } from "react";
 import { ReactSVG } from "react-svg";
-import { useGetExchangeInfoQuery, useGetCurrentPricesQuery, useGet24hrTickerQuery } from "../../redux/features/binanceSlice";
-import { calculatePortfolioShare } from "../../utils/calculatePortfolioShare";
-import { IAsset } from "../../types/types";
+import { useModalForm } from "../../hooks/useModalForm";
+import { PriceInfo, TickerInfo } from "../../types/types";
 import { setToFixed } from "../../utils/setToFixed";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { useOutsideClick } from "../../hooks/useOutsideClick";
+import Loader from "../Loader/Loader";
 import closeIcon from "../../assets/icon-close.svg";
 import "./modalForm.scss";
-import Loader from "../Loader/Loader";
-
-interface PriceInfo {
-  symbol: string;
-  price: string;
-}
-
-interface TickerInfo {
-  symbol: string;
-  priceChangePercent: string;
-}
 
 const ModalForm: FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { data: exchangeData, isLoading: isLoadingExchange } = useGetExchangeInfoQuery(null);
-  const { data: pricesData, isLoading: isLoadingPrices } = useGetCurrentPricesQuery(null);
-  const { data: tickerData, isLoading: isLoadingTicker } = useGet24hrTickerQuery(null);
-  const [currencies, setCurrencies] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
-  const [currentPrice, setCurrentPrice] = useState<string | null>(null);
-  const [quantity, setQuantity] = useState<number>(1);
-  const isLoading = isLoadingExchange || isLoadingPrices || isLoadingTicker;
-  const modalRef = useRef(null);
-  const isQuantityValid = quantity < 0;
-
-  useOutsideClick(modalRef, onClose);
-
-  useEffect(() => {
-    if (exchangeData) {
-      const uniqueCurrencies = new Set<string>();
-      exchangeData.symbols.forEach((symbol: { baseAsset: string }) => {
-        uniqueCurrencies.add(symbol.baseAsset);
-      });
-      setCurrencies(Array.from(uniqueCurrencies));
-    }
-  }, [exchangeData]);
-
-  const filteredCurrencies = useMemo(() => 
-    currencies.filter(currency => 
-      currency.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [currencies, searchQuery]);
-
-  const handleCurrencyChoice = (currency: string) => {
-    const priceInfo = pricesData?.find((price: PriceInfo) => price.symbol === `${currency}USDT`);
-    setSelectedCurrency(currency);
-    setCurrentPrice(priceInfo ? priceInfo.price : "");
-  };
-
-  const handleSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const [portfolio, setPortfolio] = useLocalStorage<IAsset[]>("currencies", []);
-  const handleAdd = () => {
-    if (selectedCurrency && currentPrice) {
-      const priceChangeInfo = tickerData?.find((ticker: TickerInfo) => ticker.symbol === `${selectedCurrency}USDT`);
-      const priceChangePercent = priceChangeInfo?.priceChangePercent;
-
-      const currencyData: IAsset = {
-        id: Math.random().toString(36).substring(2, 10),
-        currency: selectedCurrency,
-        price: parseFloat(currentPrice),
-        totalAmount: parseFloat(currentPrice) * quantity,
-        quantity: quantity,
-        priceChangePercent: priceChangePercent,
-        portfolioPercentage: ""
-      };
-
-      const updatedPortfolio = [...portfolio, currencyData];
-
-      setPortfolio(calculatePortfolioShare(updatedPortfolio));
-
-      setSelectedCurrency(null);
-      setCurrentPrice(null);
-      setQuantity(0);
-      onClose();
-    }
-  };
-
-  const handleCancel = () => {
-    setSelectedCurrency(null);
-    setCurrentPrice(null);
-    setQuantity(1);
-  };
+  const {
+    isLoading,
+    isQuantityValid,
+    filteredCurrencies,
+    pricesData,
+    tickerData,
+    modalRef,
+    quantity,
+    currentPrice,
+    setQuantity,
+    selectedCurrency,
+    handleCurrencyChoice,
+    searchQuery,
+    handleSearchQuery,
+    handleAdd,
+    handleCancel,
+  } = useModalForm(onClose)
 
   return (
     <div className="modal">
@@ -103,6 +36,7 @@ const ModalForm: FC<{ onClose: () => void }> = ({ onClose }) => {
               <ReactSVG src={closeIcon} />
             </button>
           </div>
+
           <div>
             <input
               className="modal__search"
