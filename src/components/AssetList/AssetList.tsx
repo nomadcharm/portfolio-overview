@@ -6,7 +6,7 @@ import Asset from "../Asset/Asset";
 import "./assetList.scss";
 
 interface AssetListProps {
-  updatedPrices: {symbol: string; price: string }[]
+  updatedPrices: { symbol: string; price: string }[]
 }
 
 const AssetList: FC<AssetListProps> = ({ updatedPrices }) => {
@@ -56,7 +56,13 @@ const AssetList: FC<AssetListProps> = ({ updatedPrices }) => {
             </thead>
             <tbody>
               {assets.map((asset: IAsset) => (
-                <Asset key={asset.id} asset={asset} handleClick={() => handleDeleteAsset(asset.id)} />
+                <tr
+                  key={asset.id}
+                  tabIndex={0}
+                  onClick={() => handleDeleteAsset(asset.id)}
+                >
+                  <Asset asset={asset} />
+                </tr>
               ))}
             </tbody>
           </table>

@@ -4,12 +4,13 @@ import { IAsset } from "../../types/types";
 
 interface AssetProps {
   asset: IAsset,
-  handleClick: () => void,
+  // handleClick: () => void,
 }
 
-const Asset: FC<AssetProps> = ({ asset, handleClick }) => {
+const Asset: FC<AssetProps> = ({ asset }) => {
   return (
-    <tr onClick={handleClick}>
+    // <tr onClick={handleClick}>
+    <>
       <td>{asset.currency}</td>
       <td>{asset.quantity}</td>
       <td>${setToFixed(asset.price, 2)}</td>
@@ -22,7 +23,8 @@ const Asset: FC<AssetProps> = ({ asset, handleClick }) => {
         )}
       </td>
       <td>{setToFixed(asset.portfolioPercentage, 2)}%</td>
-    </tr>
+
+    </>
   )
 }
 

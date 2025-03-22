@@ -25,7 +25,13 @@
 
       &>tr {
         border-bottom: 2px solid var(--clr-algae-green);
+        transition: background-color 0.3s ease-in-out;
         cursor: pointer;
+
+        &:focus {
+          outline: none;
+          background-color: var(--clr-solitude);
+        }
 
         & > td {
           padding: 16px;
