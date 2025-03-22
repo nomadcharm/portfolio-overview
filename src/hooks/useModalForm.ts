@@ -1,15 +1,32 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { useGetExchangeInfoQuery, useGetCurrentPricesQuery, useGet24hrTickerQuery } from "../redux/features/binanceSlice";
-import { PriceInfo, IAsset, TickerInfo } from "../types/types";
+import { IAsset, IPriceInfo, ITickerInfo } from "../types/types";
 import { calculatePortfolioShare } from "../utils/calculatePortfolioShare";
 import { useLocalStorage } from "./useLocalStorage";
 import { useOutsideClick } from "./useOutsideClick";
+import { useGet24hrTickerQuery, useGetCurrentPricesQuery, useGetExchangeInfoQuery, useWebSocketPrices } from "../redux/features/binanceSlice";
 
 export const useModalForm = (onClose: () => void) => {
   const { data: exchangeData, isLoading: isLoadingExchange } = useGetExchangeInfoQuery(null);
-  const { data: pricesData, isLoading: isLoadingPrices } = useGetCurrentPricesQuery(null);
+  const { data: initialPricesData, isLoading: isLoadingPrices } = useGetCurrentPricesQuery(null);
   const { data: tickerData, isLoading: isLoadingTicker } = useGet24hrTickerQuery(null);
   
+  const [pricesData, setPricesData] = useState<IPriceInfo[] | []>([]);
+  const [initialPrices, setInitialPrices] = useState<IPriceInfo[] | []>([]);
+  useWebSocketPrices(setPricesData);
+
+  useEffect(() => {
+    if (initialPricesData) {
+      const validPrices = initialPricesData.map((price: { symbol: string; price: string }) => {
+        const parsedPrice = parseFloat(price.price);
+        return {
+          symbol: price.symbol,
+          price: isNaN(parsedPrice) ? null : parsedPrice
+        };
+      });
+      setInitialPrices(validPrices);
+    }
+  }, [initialPricesData]);
+
   const [portfolio, setPortfolio] = useLocalStorage<IAsset[]>("currencies", []);
   const [currencies, setCurrencies] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -39,9 +56,9 @@ export const useModalForm = (onClose: () => void) => {
     ), [currencies, searchQuery]);
 
   const handleCurrencyChoice = (currency: string) => {
-    const priceInfo = pricesData?.find((price: PriceInfo) => price.symbol === `${currency}USDT`);
+    const priceInfo = [...pricesData, ...initialPrices].find((price: IPriceInfo) => price.symbol === `${currency}USDT`);
     setSelectedCurrency(currency);
-    setCurrentPrice(priceInfo ? priceInfo.price : "");
+    setCurrentPrice(priceInfo && priceInfo.price !== null ? priceInfo.price.toString() : "");
   };
 
   const handleSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +73,7 @@ export const useModalForm = (onClose: () => void) => {
 
   const handleAdd = () => {
     if (selectedCurrency && currentPrice) {
-      const priceChangeInfo = tickerData?.find((ticker: TickerInfo) => ticker.symbol === `${selectedCurrency}USDT`);
+      const priceChangeInfo = tickerData?.find((ticker: ITickerInfo) => ticker.symbol === `${selectedCurrency}USDT`);
       const priceChangePercent = priceChangeInfo?.priceChangePercent;
 
       const currencyData: IAsset = {
@@ -85,7 +102,7 @@ export const useModalForm = (onClose: () => void) => {
     isLoading,
     isQuantityValid,
     filteredCurrencies,
-    pricesData,
+    pricesData: [...pricesData, ...initialPrices],
     tickerData,
     modalRef,
     quantity,
@@ -97,5 +114,5 @@ export const useModalForm = (onClose: () => void) => {
     handleSearchQuery,
     handleAdd,
     handleCancel,
-  }
+  };
 }

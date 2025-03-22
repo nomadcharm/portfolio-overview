@@ -1,16 +1,38 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { calculatePortfolioShare } from "../../utils/calculatePortfolioShare";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { IAsset } from "../../types/types";
 import Asset from "../Asset/Asset";
 import "./assetList.scss";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { calculatePortfolioShare } from "../../utils/calculatePortfolioShare";
 
-const AssetList: FC = () => {
+const AssetList: FC<{ updatedPrices: { symbol: string; price: string }[] }> = ({ updatedPrices }) => {
   const [assets, setAssets] = useLocalStorage<IAsset[]>("currencies", []);
+
+  const updateAssetPrices = () => {
+    if (Array.isArray(updatedPrices) && updatedPrices.length > 0) {
+      const updatedAssets = assets.map(asset => {
+        const priceInfo = updatedPrices.find(price => price.symbol === `${asset.currency}USDT`);
+        if (priceInfo && priceInfo.price !== null) {
+          return {
+            ...asset,
+            price: Number(priceInfo.price),
+            totalAmount: Number(priceInfo.price) * asset.quantity
+          };
+        }
+        return asset;
+      });
+
+      setAssets(calculatePortfolioShare(updatedAssets));
+    }
+  };
+
+  useEffect(() => {
+    updateAssetPrices();
+  }, [updatedPrices]);
 
   const handleDeleteAsset = (id: string) => {
     const updatedAssets = assets.filter(asset => asset.id !== id);
-    setAssets(calculatePortfolioShare(updatedAssets));
+    setAssets(updatedAssets);
   };
 
   return (

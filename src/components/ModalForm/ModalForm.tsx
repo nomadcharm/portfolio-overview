@@ -1,7 +1,7 @@
 import { FC, useCallback } from "react";
 import { ReactSVG } from "react-svg";
 import { useModalForm } from "../../hooks/useModalForm";
-import { PriceInfo, TickerInfo } from "../../types/types";
+import { IPriceInfo, ITickerInfo } from "../../types/types";
 import { setToFixed } from "../../utils/setToFixed";
 import Loader from "../Loader/Loader";
 import closeIcon from "../../assets/icon-close.svg";
@@ -58,8 +58,8 @@ const ModalForm: FC<{ onClose: () => void }> = ({ onClose }) => {
 
           <ul className="modal__currencies currency-list">
             {filteredCurrencies.map((currency) => {
-              const priceInfo = pricesData?.find((price: PriceInfo) => price.symbol === `${currency}USDT`);
-              const tickerInfo = tickerData?.find((ticker: TickerInfo) => ticker.symbol === `${currency}USDT`);
+              const priceInfo = pricesData?.find((price: IPriceInfo) => price.symbol === `${currency}USDT`);
+              const tickerInfo = tickerData?.find((ticker: ITickerInfo) => ticker.symbol === `${currency}USDT`);
               const currentPrice = priceInfo ? priceInfo.price : 'N/A';
               const percentChange = tickerInfo ? tickerInfo.priceChangePercent : 'N/A';
 
