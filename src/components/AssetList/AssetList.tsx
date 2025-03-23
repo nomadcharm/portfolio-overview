@@ -1,4 +1,5 @@
-import { FC, useEffect } from "react";
+import { FC, ReactNode, useEffect } from "react";
+import { FixedSizeList as List } from "react-window";
 import { calculatePortfolioShare } from "../../utils/calculatePortfolioShare";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { IAsset } from "../../types/types";
@@ -8,6 +9,16 @@ import "./assetList.scss";
 interface AssetListProps {
   updatedPrices: { symbol: string; price: string }[]
 }
+
+interface FragmentWrapperProps {
+  children: ReactNode
+}
+
+const FragmentWrapper: FC<FragmentWrapperProps> = (({ children }) => (
+  <>
+    {children}
+  </>
+));
 
 const AssetList: FC<AssetListProps> = ({ updatedPrices }) => {
   const [assets, setAssets] = useLocalStorage<IAsset[]>("currencies", []);
@@ -54,17 +65,21 @@ const AssetList: FC<AssetListProps> = ({ updatedPrices }) => {
                 <th>% портфеля</th>
               </tr>
             </thead>
-            <tbody>
-              {assets.map((asset: IAsset) => (
-                <tr
-                  key={asset.id}
-                  tabIndex={0}
-                  onClick={() => handleDeleteAsset(asset.id)}
-                >
-                  <Asset asset={asset} />
+            <List
+              outerElementType={FragmentWrapper}
+              innerElementType="tbody"
+              itemData={assets}
+              itemCount={assets.length}
+              itemSize={50}
+              height={700}
+              width={400}
+            >
+              {({ data, index }: {data: IAsset[], index: number}) => (
+                <tr tabIndex={0} onClick={() => handleDeleteAsset(data[index].id)}>
+                  <Asset asset={data[index]} />
                 </tr>
-              ))}
-            </tbody>
+              )}
+            </List>
           </table>
         ) : (
           <p className="assets__warning">Нет активов в вашем портфеле. Добавьте что-нибудь, чтобы начать!</p>
